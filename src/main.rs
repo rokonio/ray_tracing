@@ -1,3 +1,5 @@
+use std::io::{self, Write};
+
 fn main() {
 
 	// Image
@@ -10,6 +12,13 @@ fn main() {
 	println!("P3\n{} {}\n255", IMG_WIDTH, IMG_HEIGHT);
 
 	for j in (0..IMG_HEIGHT).rev() {
+		match io::stderr().write_all(
+			format!("Scanlines ramaining: {}\n", j)
+			.as_bytes()
+		) {
+			Err(_) => panic!("Can't write in the stderr..."),
+			Ok(_) => (),
+		}
 		for i in 0..IMG_WIDTH {
 			let r = i as f64 / (IMG_WIDTH-1) as f64;
 			let g = j as f64 / (IMG_HEIGHT-1) as f64;
