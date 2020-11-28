@@ -1,8 +1,10 @@
 mod vec3;
 mod color;
+mod ray;
 
 use vec3::*;
 use color::*;
+use ray::*;
 
 fn main() {
 
@@ -37,7 +39,7 @@ fn main() {
 
 	println!("{}", out);
 
-	eprintln!("Done.")
-	
+	eprintln!("Done.");
+
 	// Note: After building command >target\debug\ray_tracing.exe > output.ppm
 }
