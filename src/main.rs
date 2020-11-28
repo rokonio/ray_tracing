@@ -13,9 +13,17 @@ fn main() {
 	const IMG_WIDTH: u32 = 256;
 	const IMG_HEIGHT: u32 = 256;
 
+	let mut out = String::with_capacity(
+		(
+			IMG_WIDTH*IMG_HEIGHT*
+			((IMG_HEIGHT).to_string().len() + (IMG_WIDTH).to_string().len() + 3) as u32
+		)
+		as usize
+	);
+
 	// Render
 
-	println!("P3\n{} {}\n255", IMG_WIDTH, IMG_HEIGHT);
+	out.push_str(format!("P3\n{} {}\n255\n", IMG_WIDTH, IMG_HEIGHT).as_str());
 
 	for j in (0..IMG_HEIGHT).rev() {
 		match io::stderr().write_all(
@@ -31,9 +39,11 @@ fn main() {
 				(j as f64) / ((IMG_WIDTH-1) as f64),
 				0.25,
 			);
-			write_color(io::stdout(), pixel_color);
+			write_color(&mut out, pixel_color);
 		}
 	}
 
+	println!("{}", out);
+	
 	// Note: After building command >target\debug\ray_tracing.exe > output.ppm
 }
