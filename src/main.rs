@@ -8,14 +8,14 @@ use ray::*;
 
 fn hit_sphere(center: &Point3, radius: f64, r: &Ray) -> f64 {
 	let oc = r.origin() - *center;
-	let a = dot(&r.direction(), &r.direction());
-	let b = 2. * dot(&oc, &r.direction());
-	let c = dot(&oc, &oc) - radius*radius;
-	let discriminant = b*b - 4.*a*c;
+	let a = r.direction().length_squared();
+	let half_b = dot(&oc, &r.direction());
+	let c = oc.length_squared() - radius*radius;
+	let discriminant = half_b*half_b - a*c;
 	if discriminant  < 0. {
 		return -1.;
 	} else {
-		return (-b - f64::sqrt(discriminant)) / (a * 2.);
+		return (-half_b - f64::sqrt(discriminant)) / a;
 	}
 }
 
