@@ -7,7 +7,7 @@ use color::*;
 use ray::*;
 
 fn ray_color(r: &Ray) -> Color {
-	let unit_direction = unit_vector(r.direction());
+	let unit_direction = unit_vector(&r.direction());
 	let t = 0.5*(unit_direction.y() + 1.);
 	(1. - t) * Color::new(1., 1., 1.) + t * Color::new(0.2, 0.5, 1.)
 }
