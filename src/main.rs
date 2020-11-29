@@ -6,12 +6,29 @@ use vec3::*;
 use color::*;
 use ray::*;
 
+fn ray_color(r: &Ray) -> Color {
+	let unit_direction = unit_vector(r.direction());
+	let t = 0.5*(unit_direction.y() + 1.);
+	(1. - t) * Color::new(1., 1., 1.) + t * Color::new(0.2, 0.5, 1.)
+}
+
 fn main() {
 
 	// Image
+	const ASPECT_RATIO: f64 = 16. / 9.;
+	const IMG_WIDTH: u32 = 400;
+	const IMG_HEIGHT: u32 = (IMG_WIDTH as f64 / ASPECT_RATIO) as u32;
 
-	const IMG_WIDTH: u32 = 256;
-	const IMG_HEIGHT: u32 = 256;
+	// Camera
+
+	let viewport_height = 2.;
+	let viewport_width = ASPECT_RATIO * viewport_height;
+	let focal_length = 1.;
+
+	let origin = Point3::new(0., 0., 0.);
+	let horizontal = Vec3::new(viewport_width, 0., 0.);
+	let vertical = Vec3::new(0., viewport_height, 0.);
+	let lower_left_corner = origin - horizontal/2. - vertical/2. - Vec3::new(0., 0., focal_length);
 
 	let mut out = String::with_capacity(
 		(
@@ -28,11 +45,10 @@ fn main() {
 	for j in (0..IMG_HEIGHT).rev() {
 		eprintln!("Scanlines ramaining: {}", j);
 		for i in 0..IMG_WIDTH {
-			let pixel_color = Color::new(
-				(i as f64) / ((IMG_HEIGHT-1) as f64),
-				(j as f64) / ((IMG_WIDTH-1) as f64),
-				0.25,
-			);
+			let u = (i as f64) / ((IMG_HEIGHT-1) as f64);
+			let v = (j as f64) / ((IMG_WIDTH-1) as f64);
+			let r = Ray::new(origin, lower_left_corner + u*horizontal + v*vertical - origin);
+			let pixel_color = ray_color(&r);
 			write_color(&mut out, pixel_color);
 		}
 	}
